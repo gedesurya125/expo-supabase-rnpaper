@@ -1,4 +1,3 @@
-import { Tabs } from "expo-router";
 import React from "react";
 
 import { Appbar, Drawer as RnpDrawer } from "react-native-paper";
