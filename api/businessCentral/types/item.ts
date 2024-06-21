@@ -1,0 +1,24 @@
+export type BcItem = {
+  baseUnitOfMeasureCode: string;
+  baseUnitOfMeasureId: string;
+  blocked: boolean;
+  displayName: string;
+  displayName2: string;
+  generalProductPostingGroupCode: string;
+  generalProductPostingGroupId: string;
+  gtin: string;
+  id: string;
+  inventory: number;
+  inventoryPostingGroupCode: string;
+  inventoryPostingGroupId: string;
+  itemCategoryCode: string;
+  itemCategoryId: string;
+  lastModifiedDateTime: string;
+  number: string;
+  priceIncludesTax: boolean;
+  taxGroupCode: string;
+  taxGroupId: string;
+  type: string;
+  unitCost: number;
+  unitPrice: number;
+};

@@ -1,0 +1,42 @@
+export type BcSalesQuoteLine = {
+  id: string;
+  documentId: string;
+  sequence: number;
+  itemId: string;
+  accountId: string;
+  lineType: string;
+  lineObjectNumber: string;
+  description: string;
+  descriptionnumber: string;
+  unitOfMeasureId: string;
+  unitOfMeasureCode: string;
+  unitPrice: number;
+  quantity: number;
+  discountAmount: number;
+  discountPercent: number;
+  discountAppliedBeforeTax: false;
+  amountExcludingTax: number;
+  taxCode: string;
+  taxPercent: number;
+  totalTaxAmount: number;
+  amountIncludingTax: number;
+  netAmount: number;
+  netTaxAmount: number;
+  netAmountIncludingTax: number;
+  itemVariantId: string;
+  locationId: string;
+};
+
+export type CreateBcSalesQuoteLineRequest = {
+  itemId: string;
+  lineType: 'Item' | string;
+  lineObjectNumber: string;
+  description: string;
+  unitOfMeasureId: string;
+  unitOfMeasureCode: string;
+  unitPrice: number;
+  quantity: number;
+  discountAmount: number;
+  discountPercent: number;
+  itemVariantId?: string;
+};
