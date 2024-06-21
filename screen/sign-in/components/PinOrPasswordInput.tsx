@@ -1,10 +1,10 @@
-import React from "react";
+import React from 'react';
 
-import { PinVerification } from "./PinVerification";
-import { CredentialInputProps } from "./EmailInput";
-import { Button, Text } from "react-native-paper";
-import { useCurrentUser } from "@/utils/useCurrentUser";
-import { TextInput } from "@/components";
+import { PinVerification } from './PinVerification';
+import { CredentialInputProps } from './EmailInput';
+import { Button, Text } from 'react-native-paper';
+import { useCurrentUser } from '@/utils/useCurrentUser';
+import { TextInput } from '@/components';
 
 export const PinOrPasswordInput = ({
   value,
@@ -14,20 +14,13 @@ export const PinOrPasswordInput = ({
   isSessionExist,
   hasPin,
   password,
-  setPassword,
+  setPassword
 }: CredentialInputProps) => {
   return (
     <>
-      <Text variant="headlineMedium">
-        {isSessionExist ? "Pin" : "Password"}
-      </Text>
+      <Text variant="headlineMedium">{isSessionExist ? 'Pin' : 'Password'}</Text>
       {isSessionExist && (
-        <PinVerification
-          value={value}
-          setValue={setValue}
-          email={email}
-          hasPin={hasPin}
-        />
+        <PinVerification value={value} setValue={setValue} email={email} hasPin={hasPin} />
       )}
 
       {!isSessionExist && (
@@ -40,14 +33,13 @@ export const PinOrPasswordInput = ({
             }}
             testID="password-input"
             style={{
-              minWidth: "80%",
+              minWidth: '80%'
             }}
           />
           <Button
             onPress={() => {
               handleButtonClick({ email, password });
-            }}
-          >
+            }}>
             Proceed Login
           </Button>
         </>
@@ -56,15 +48,7 @@ export const PinOrPasswordInput = ({
   );
 };
 
-export const PinInput = ({
-  pin,
-  setPin,
-  email,
-}: {
-  pin: string;
-  setPin: any;
-  email: string;
-}) => {
+export const PinInput = ({ pin, setPin, email }: { pin: string; setPin: any; email: string }) => {
   const { hasPin, loading } = useCurrentUser();
 
   return (
@@ -72,12 +56,7 @@ export const PinInput = ({
       {loading ? (
         <Text>Loading...</Text>
       ) : (
-        <PinVerification
-          value={pin}
-          setValue={setPin}
-          email={email}
-          hasPin={hasPin}
-        />
+        <PinVerification value={pin} setValue={setPin} email={email} hasPin={hasPin} />
       )}
     </InputWrapper>
   );
@@ -87,17 +66,11 @@ export const PasswordInput = ({
   password,
   setPassword,
   handleLogin,
-  email,
+  email
 }: {
   password: string;
   setPassword: any;
-  handleLogin: ({
-    email,
-    password,
-  }: {
-    email: string;
-    password: string;
-  }) => void;
+  handleLogin: ({ email, password }: { email: string; password: string }) => void;
   email: string;
 }) => {
   return (
@@ -110,7 +83,7 @@ export const PasswordInput = ({
         }}
         testID="password-input"
         style={{
-          marginTop: 20,
+          marginTop: 20
         }}
       />
       <Button
@@ -119,22 +92,15 @@ export const PasswordInput = ({
           handleLogin({ email, password });
         }}
         style={{
-          marginTop: 20,
-        }}
-      >
+          marginTop: 20
+        }}>
         Proceed Login
       </Button>
     </InputWrapper>
   );
 };
 
-const InputWrapper = ({
-  children,
-  headline,
-}: {
-  children: React.ReactNode;
-  headline: string;
-}) => {
+const InputWrapper = ({ children, headline }: { children: React.ReactNode; headline: string }) => {
   return (
     <>
       <Text variant="headlineLarge">{headline}</Text>

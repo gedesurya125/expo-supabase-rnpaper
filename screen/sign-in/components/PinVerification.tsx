@@ -1,20 +1,20 @@
-import React from "react";
-import { useNavigation } from "expo-router";
+import React from 'react';
+import { useNavigation } from 'expo-router';
 // import { H3 } from 'tamagui';
-import { useSession } from "@/components/AuthContext";
+import { useSession } from '@/components/AuthContext';
 // import { StyledButton } from '~/components/StyledButton';
-import { supabase } from "@/utils/supabase";
+import { supabase } from '@/utils/supabase';
 // import { useCurrentUser } from '~/utils/useCurrentUser';
-import { PinCodeInput } from "./PinCodeInput";
-import { useCurrentUser } from "@/utils/useCurrentUser";
-import { Button, Text } from "react-native-paper";
+import { PinCodeInput } from './PinCodeInput';
+import { useCurrentUser } from '@/utils/useCurrentUser';
+import { Button, Text } from 'react-native-paper';
 
 // Reused components
 export const PinVerification = ({
   value,
   setValue,
   email,
-  hasPin,
+  hasPin
 }: {
   value: string;
   setValue: any;
@@ -25,7 +25,7 @@ export const PinVerification = ({
   const navigation = useNavigation();
 
   const { currentUser } = useCurrentUser();
-  const [error, setError] = React.useState("");
+  const [error, setError] = React.useState('');
 
   const updateUserPin = async (pin: string) => {
     const updates = {
@@ -35,18 +35,18 @@ export const PinVerification = ({
       website: currentUser?.website,
       avatar_url: currentUser?.avatar_url,
       pin,
-      updated_at: new Date(),
+      updated_at: new Date()
     };
     try {
-      const { error } = await supabase.from("profiles").upsert(updates);
+      const { error } = await supabase.from('profiles').upsert(updates);
       if (error) {
         throw error;
       } else {
         handleInSessionLogin({ email, pin });
-        navigation.navigate("(drawer)" as never);
+        navigation.navigate('(drawer)' as never);
       }
     } catch (err) {
-      console.log("error update pin", err);
+      console.log('error update pin', err);
     }
   };
 
@@ -58,7 +58,7 @@ export const PinVerification = ({
         if (currentUser?.pin.toString() === value) {
           handleInSessionLogin({ email, pin: value });
         } else {
-          setError("Pin is not match");
+          setError('Pin is not match');
         }
       }}
       errorText={error}
@@ -67,14 +67,8 @@ export const PinVerification = ({
   ) : (
     <>
       <Text>Create New</Text>
-      <PinCodeInput
-        value={value}
-        onTextChange={(value) => setValue(value)}
-        errorText={error}
-      />
-      <Button onPress={async () => await updateUserPin(value)}>
-        Confirm Pin
-      </Button>
+      <PinCodeInput value={value} onTextChange={(value) => setValue(value)} errorText={error} />
+      <Button onPress={async () => await updateUserPin(value)}>Confirm Pin</Button>
     </>
   );
 };

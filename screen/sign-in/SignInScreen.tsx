@@ -1,39 +1,25 @@
-import React from "react";
+import React from 'react';
 // @ts-ignore
-import { KeyboardAvoidingView, Platform } from "react-native";
-import { ScrollView, View } from "react-native";
-import { useSession } from "@/components/AuthContext";
-import { getCurrentUser } from "@/utils/useCurrentUser";
-import {
-  PasswordInput,
-  PinInput,
-  PinOrPasswordInput,
-} from "./components/PinOrPasswordInput";
-import { EmailInput } from "./components/EmailInput";
-import { Redirect } from "expo-router";
-import { ThemedView } from "@/components/ThemedView";
+import { KeyboardAvoidingView, Platform } from 'react-native';
+import { ScrollView, View } from 'react-native';
+import { useSession } from '@/components/AuthContext';
+import { getCurrentUser } from '@/utils/useCurrentUser';
+import { PasswordInput, PinInput, PinOrPasswordInput } from './components/PinOrPasswordInput';
+import { EmailInput } from './components/EmailInput';
+import { Redirect } from 'expo-router';
+import { ThemedView } from '@/components/ThemedView';
+import { BioMetricVerification } from './components/BioMetricVerification';
 
-export const SignInScreen = ({
-  isSessionExist,
-}: {
-  isSessionExist: boolean;
-}) => {
+export const SignInScreen = ({ isSessionExist }: { isSessionExist: boolean }) => {
   const [step, setStep] = React.useState(1);
 
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [pin, setPin] = React.useState(""); // currently pin can be as password
-  const { signInWithEmail, session, handleInSessionLogin, inSessionLoginInfo } =
-    useSession();
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [pin, setPin] = React.useState(''); // currently pin can be as password
+  const { signInWithEmail, session, handleInSessionLogin, inSessionLoginInfo } = useSession();
 
   // ? when sign in don't as user the pin
-  const handleSignIn = async ({
-    email,
-    password,
-  }: {
-    email: string;
-    password: string;
-  }) => {
+  const handleSignIn = async ({ email, password }: { email: string; password: string }) => {
     await signInWithEmail({ email, password });
     const loggedInUserData = await getCurrentUser();
     if (loggedInUserData?.pin) {
@@ -42,6 +28,10 @@ export const SignInScreen = ({
     if (!loggedInUserData?.pin && loggedInUserData?.username) {
       setStep(3);
     }
+  };
+
+  const handleIncreaseStep = () => {
+    setStep((state) => state + 1);
   };
 
   React.useEffect(() => {
@@ -54,18 +44,16 @@ export const SignInScreen = ({
   // ?: source https://reactnative.dev/docs/keyboardavoidingview
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{
-        flex: 1,
-      }}
-    >
+        flex: 1
+      }}>
       <ThemedView
         style={{
           flex: 1,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
         {step === 1 && !isSessionExist && (
           <EmailInput
             value={email}
@@ -84,8 +72,9 @@ export const SignInScreen = ({
           />
         )}
         {step === 3 && isSessionExist && (
-          <PinInput pin={pin} setPin={setPin} email={email} />
+          <BioMetricVerification handleIncreaseStep={handleIncreaseStep} />
         )}
+        {step === 4 && isSessionExist && <PinInput pin={pin} setPin={setPin} email={email} />}
       </ThemedView>
     </KeyboardAvoidingView>
   );

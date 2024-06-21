@@ -1,10 +1,10 @@
-import React from "react";
-import { useNavigation } from "expo-router";
-import { useSession } from "@/components/AuthContext";
-import { useCurrentUser } from "@/utils/useCurrentUser";
-import { View } from "react-native";
-import { Button, Text } from "react-native-paper";
-import { TextInput } from "@/components";
+import React from 'react';
+import { useNavigation } from 'expo-router';
+import { useSession } from '@/components/AuthContext';
+import { useCurrentUser } from '@/utils/useCurrentUser';
+import { View } from 'react-native';
+import { Button, Text } from 'react-native-paper';
+import { TextInput } from '@/components';
 
 // todo fix the login input props
 interface LoginInputProps {
@@ -12,11 +12,7 @@ interface LoginInputProps {
   setValue: any;
   handleButtonClick: any;
 }
-export const EmailInput = ({
-  value,
-  setValue,
-  handleButtonClick,
-}: LoginInputProps) => {
+export const EmailInput = ({ value, setValue, handleButtonClick }: LoginInputProps) => {
   const navigation = useNavigation();
   const { isSessionExist, session } = useSession();
   const { currentUser } = useCurrentUser();
@@ -27,7 +23,7 @@ export const EmailInput = ({
   const welcomeMessage =
     isSessionExist && currentUser?.full_name
       ? `Hi ${currentUser?.full_name}, welcome back!!`
-      : "Hi, welcome to Ambratect app";
+      : 'Hi, welcome to Ambratect app';
 
   return (
     <View>
@@ -43,7 +39,7 @@ export const EmailInput = ({
         testID="email-input"
         style={{
           marginTop: 20,
-          minWidth: "40%",
+          minWidth: '40%'
         }}
       />
       <Button
@@ -52,21 +48,19 @@ export const EmailInput = ({
         disabled={isButtonDisabled}
         testID="login-button"
         style={{
-          marginTop: 20,
-        }}
-      >
+          marginTop: 20
+        }}>
         Login
       </Button>
       {!isSessionExist && (
         <Button
           mode="contained"
           onPress={() => {
-            navigation.navigate("sign-up" as never);
+            navigation.navigate('sign-up' as never);
           }}
           style={{
-            marginTop: 20,
-          }}
-        >
+            marginTop: 20
+          }}>
           Sign Up
         </Button>
       )}

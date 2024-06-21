@@ -1,7 +1,7 @@
-import React from "react";
-import { supabase } from "@/utils/supabase";
-import { Session } from "@supabase/supabase-js";
-import { Alert, AppState } from "react-native";
+import React from 'react';
+import { supabase } from '@/utils/supabase';
+import { Session } from '@supabase/supabase-js';
+import { Alert, AppState } from 'react-native';
 
 interface SignProps {
   email: string;
@@ -13,14 +13,14 @@ interface InSessionLoginInfoProps {
   pin: string;
 }
 
-AppState.addEventListener("change", (state) => {
-  if (state === "active") {
+AppState.addEventListener('change', (state) => {
+  if (state === 'active') {
     supabase.auth.startAutoRefresh().catch((err) => {
-      console.log("error starting the auto refresh", err);
+      console.log('error starting the auto refresh', err);
     });
   } else {
     supabase.auth.stopAutoRefresh().catch((err) => {
-      console.log("error stopping the auto refresh", err);
+      console.log('error stopping the auto refresh', err);
     });
   }
 });
@@ -43,19 +43,17 @@ const AuthContext = React.createContext<{
   signOut: () => null,
   session: null,
   loading: false,
-  inSessionLoginInfo: { email: "", pin: "" },
+  inSessionLoginInfo: { email: '', pin: '' },
   handleInSessionLogin: () => {},
-  isSessionExist: false,
+  isSessionExist: false
 });
 
 // This hook can be used to access the user info.
 export function useSession() {
   const value = React.useContext(AuthContext);
-  if (process.env.NODE_ENV !== "production") {
+  if (process.env.NODE_ENV !== 'production') {
     if (!value) {
-      throw new Error(
-        "useSession must be wrapped in a <AuthContextProvider />"
-      );
+      throw new Error('useSession must be wrapped in a <AuthContextProvider />');
     }
   }
 
@@ -66,15 +64,15 @@ export function AuthContextProvider(props: React.PropsWithChildren) {
   const [loading, setLoading] = React.useState(false);
   const [session, setSession] = React.useState<Session | null>(null);
   const [inSessionLoginInfo, setInSessionLoginInfo] = React.useState({
-    email: "",
-    pin: "",
+    email: '',
+    pin: ''
   });
 
   async function signInWithEmail({ email, password }: SignProps) {
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
       email,
-      password,
+      password
     });
     if (error) Alert.alert(error.message);
     setLoading(false);
@@ -84,15 +82,14 @@ export function AuthContextProvider(props: React.PropsWithChildren) {
     setLoading(true);
     const {
       data: { session },
-      error,
+      error
     } = await supabase.auth.signUp({
       email,
-      password,
+      password
     });
 
     if (error) Alert.alert(error.message);
-    if (!session)
-      Alert.alert("Please check your inbox for email verification!");
+    if (!session) Alert.alert('Please check your inbox for email verification!');
     setLoading(false);
   }
 
@@ -122,9 +119,8 @@ export function AuthContextProvider(props: React.PropsWithChildren) {
         loading,
         inSessionLoginInfo,
         handleInSessionLogin,
-        isSessionExist: !!session && !!session?.user,
-      }}
-    >
+        isSessionExist: !!session && !!session?.user
+      }}>
       {props.children}
     </AuthContext.Provider>
   );
