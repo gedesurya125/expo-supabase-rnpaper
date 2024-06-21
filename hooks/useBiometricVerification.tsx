@@ -12,6 +12,7 @@ type BiometricSupport = biometrics.FINGERPRINT | biometrics.FACE_ID | biometrics
 export const useBiometricVerification = () => {
   const [biometricSupports, setBiometricSupports] = React.useState<BiometricSupport[] | null>(null);
   const [loading, setLoading] = React.useState(true);
+  const [hasBeenOpened, setHasBeenOpened] = React.useState(false);
 
   useEffect(() => {
     checkHardwareAsync();
@@ -50,6 +51,8 @@ export const useBiometricVerification = () => {
       };
     setLoading(true);
 
+    setHasBeenOpened(true); //? it make sure the biometric authentication only open once
+
     try {
       const result = await LocalAuthentication.authenticateAsync({
         // promptMessage: 'Authenticate with Biometrics',
@@ -81,6 +84,7 @@ export const useBiometricVerification = () => {
   return {
     biometricSupports,
     loading,
-    authenticate
+    authenticate,
+    hasBeenOpened
   };
 };

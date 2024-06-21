@@ -10,7 +10,7 @@ export const BioMetricVerification = ({
 }: {
   handleIncreaseStep: () => void;
 }) => {
-  const { authenticate, loading, biometricSupports } = useBiometricVerification();
+  const { authenticate, loading, biometricSupports, hasBeenOpened } = useBiometricVerification();
   const { handleInSessionLogin, session, isSessionExist } = useSession();
 
   const openBiometricAuthentication = async () => {
@@ -34,9 +34,13 @@ export const BioMetricVerification = ({
     if (!loading) {
       if (!biometricSupports || biometricSupports?.length === 0) {
         handleIncreaseStep();
+      } else {
+        if (!hasBeenOpened) {
+          openBiometricAuthentication();
+        }
       }
     }
-  }, [loading, biometricSupports, handleIncreaseStep]);
+  }, [loading, biometricSupports, handleIncreaseStep, hasBeenOpened]);
 
   return (
     <ThemedView>
