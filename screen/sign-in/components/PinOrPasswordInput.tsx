@@ -18,7 +18,9 @@ export const PinOrPasswordInput = ({
 }: CredentialInputProps) => {
   return (
     <>
-      <Text>{isSessionExist ? "Pin" : "Password"}</Text>
+      <Text variant="headlineMedium">
+        {isSessionExist ? "Pin" : "Password"}
+      </Text>
       {isSessionExist && (
         <PinVerification
           value={value}
@@ -135,7 +137,7 @@ const InputWrapper = ({
 }) => {
   return (
     <>
-      <Text>{headline}</Text>
+      <Text variant="headlineLarge">{headline}</Text>
       {children}
     </>
   );

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Appbar, Drawer as RnpDrawer } from "react-native-paper";
+import { Appbar, Button, Drawer as RnpDrawer } from "react-native-paper";
 import { Drawer } from "expo-router/drawer";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native";
@@ -8,6 +8,16 @@ import { ThemedView } from "@/components/ThemedView";
 import { DrawerHeaderProps } from "@react-navigation/drawer";
 import { useSession } from "@/components/AuthContext";
 import { Redirect } from "expo-router";
+
+// TODO: RENAME THE TAB TO BE DRAWER LATER
+
+const routes = [
+  {
+    label: "Home",
+    name: "index",
+  },
+  { label: "Explore", name: "explore" },
+];
 
 export default function TabLayout() {
   const { session, inSessionLoginInfo } = useSession();
@@ -32,20 +42,18 @@ export default function TabLayout() {
             <ThemedView style={{ flex: 1 }}>
               <SafeAreaView>
                 <RnpDrawer.Section title="Main Menu">
-                  <RnpDrawer.Item
-                    label="Index"
-                    active={state.index === 0}
-                    onPress={() => {
-                      navigation.navigate("index");
-                    }}
-                  />
-                  <RnpDrawer.Item
-                    label="Explore"
-                    active={state.index === 1}
-                    onPress={() => {
-                      navigation.navigate("explore");
-                    }}
-                  />
+                  {routes.map((data, index) => {
+                    return (
+                      <RnpDrawer.Item
+                        key={index}
+                        label={data?.label}
+                        active={state.index === index}
+                        onPress={() => {
+                          navigation.navigate(data?.name);
+                        }}
+                      />
+                    );
+                  })}
                 </RnpDrawer.Section>
               </SafeAreaView>
             </ThemedView>
@@ -55,14 +63,23 @@ export default function TabLayout() {
           header: HeaderBar,
         }}
       >
-        <Drawer.Screen name="index" />
-        <Drawer.Screen name="explore" />
+        {routes.map((data, index) => {
+          return (
+            <Drawer.Screen
+              key={index}
+              name={data?.name}
+              options={{
+                drawerLabel: data?.label,
+              }}
+            />
+          );
+        })}
       </Drawer>
     </GestureHandlerRootView>
   );
 }
 
-const HeaderBar = ({ navigation }: DrawerHeaderProps) => {
+const HeaderBar = ({ navigation, ...props }: DrawerHeaderProps) => {
   const canGoBack = navigation.canGoBack();
 
   const _handleSearch = () => console.log("Searching");
@@ -83,7 +100,12 @@ const HeaderBar = ({ navigation }: DrawerHeaderProps) => {
           navigation.openDrawer();
         }}
       />
-      <Appbar.Content title="Title" />
+      <Appbar.Content
+        title={props?.options?.drawerLabel as string}
+        style={{
+          alignItems: "flex-start",
+        }}
+      />
       <Appbar.Action icon="license" onPress={_handleSearch} />
       <Appbar.Action icon="cart-outline" onPress={_handleSearch} />
       <Appbar.Action icon="magnify" onPress={_handleSearch} />

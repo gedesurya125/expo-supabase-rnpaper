@@ -20,7 +20,11 @@ export const PinCodeInput = ({
 }) => {
   const theme = useTheme();
   return (
-    <View>
+    <View
+      style={{
+        marginTop: 20,
+      }}
+    >
       <SmoothPinCodeInput
         password
         mask={mask}
