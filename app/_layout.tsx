@@ -7,6 +7,8 @@ import { useEffect } from "react";
 import "react-native-reanimated";
 
 import { defaultTheme } from "@/theme/theme";
+import { AuthContextProvider } from "@/components/AuthContext";
+import { ReactQueryProvider } from "@/components/ReactQueryProvider";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -27,12 +29,16 @@ export default function RootLayout() {
   }
 
   return (
-    <PaperProvider theme={defaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </PaperProvider>
+    <AuthContextProvider>
+      <ReactQueryProvider>
+        <PaperProvider theme={defaultTheme}>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+        </PaperProvider>
+      </ReactQueryProvider>
+    </AuthContextProvider>
   );
 }
 
