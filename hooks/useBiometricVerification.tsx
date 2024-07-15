@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import * as LocalAuthentication from 'expo-local-authentication';
+import { Platform } from 'react-native';
 
 enum biometrics {
   FINGERPRINT = 'FINGERPRINT',
@@ -53,11 +54,16 @@ export const useBiometricVerification = () => {
 
     setHasBeenOpened(true); //? it make sure the biometric authentication only open once
 
+    const isOnIos = Platform.OS === 'ios';
+
     try {
-      const result = await LocalAuthentication.authenticateAsync({
-        // promptMessage: 'Authenticate with Biometrics',
-        // fallbackLabel: 'Use Passcode'
-      });
+      const result = await LocalAuthentication.authenticateAsync(
+        isOnIos ? { disableDeviceFallback: true } : {}
+      );
+      // const result = await LocalAuthentication.authenticateAsync({
+      //   // promptMessage: 'Authenticate with Biometrics',
+      //   // fallbackLabel: 'Use Passcode'
+      // });
 
       setLoading(false);
       if (result.success) {
