@@ -8,12 +8,12 @@ export const useBcItemPicture = ({ itemId, debug }: { itemId: string; debug?: st
   // const [rawPicture, setRawPicture] = React.useState<any>(null);
 
   return useFetchBc<PictureBcResponse>({
-    queryKey: ['bc-item', 'picture'],
+    queryKey: ['bc-item', 'picture', itemId],
     fetchProps: {
       endPoint: `/items(${itemId})/picture/pictureContent`,
       options: {
         headers: {
-          Accept: 'image/*'
+          Accept: '*/*'
         }
       }
     }

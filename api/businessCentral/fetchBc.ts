@@ -30,8 +30,9 @@ export const fetchBc = async <T>(props: FetchBcProps): Promise<T | null> => {
       ...props?.options?.headers
     }
   })
-    .then((res) => {
+    .then(async (res) => {
       const contentType = res.headers.get('content-type');
+
       if (
         props.options?.headers &&
         // @ts-ignore
@@ -39,7 +40,17 @@ export const fetchBc = async <T>(props: FetchBcProps): Promise<T | null> => {
         // @ts-ignore
         props?.options?.headers?.Accept !== 'application/json'
       ) {
-        return res?.blob();
+        // return res?.blob();
+        try {
+          // const response = await fetch('https://your-api-endpoint/pictureContent');
+          return res.blob().then((blob) =>
+            convertBlobToBase64(blob).then((base64Data) => {
+              return 'data:image/jpeg;base64,' + base64Data;
+            })
+          ); // or response.arrayBuffer() if you prefer
+        } catch (error) {
+          console.error('Error fetching image:', error);
+        }
       }
 
       if (contentType?.includes('application/json')) return res.json();
@@ -47,7 +58,31 @@ export const fetchBc = async <T>(props: FetchBcProps): Promise<T | null> => {
     })
     .catch((err) => {
       console.log('Error when fetching Business Central', err, props, apiUrl);
+      return null;
     });
 
   return response || null;
+};
+
+// const fetchImage = async () => {
+//   try {
+//     const response = await fetch('https://your-api-endpoint/pictureContent');
+//     const blob = await response.blob(); // or response.arrayBuffer() if you prefer
+//     const base64Data = await convertBlobToBase64(blob);
+//     return 'data:image/jpeg;base64,' + base64Data;
+//   } catch (error) {
+//     console.error('Error fetching image:', error);
+//   }
+// };
+
+const convertBlobToBase64 = (blob: Blob) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = () => {
+      // @ts-ignore
+      resolve(reader?.result?.split(',')[1]);
+    };
+    reader.readAsDataURL(blob);
+  });
 };
