@@ -45,7 +45,7 @@ export const fetchBc = async <T>(props: FetchBcProps): Promise<T | null> => {
           return res
             .blob()
             .then(async (blob) => {
-              if (blob.size === 0) return null;
+              if (blob.size === 0) return null; //? we have to check if the blob has size, if the the file reader will cause the expo go to quite unexpectedly
               return convertBlobToBase64(blob).then((base64Data) => {
                 return base64Data ? 'data:image/jpeg;base64,' + base64Data : null;
               });
