@@ -6,16 +6,25 @@ import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { useBcItems } from '@/api/businessCentral/useBcItems';
+import { useBcItems, usePaginatedBcItems } from '@/api/businessCentral/useBcItems';
 import { List } from 'react-native-paper';
 import { BcItem } from '@/api/businessCentral/types/item';
 import { FlatList } from 'react-native-gesture-handler';
 import { useBcItemPicture } from '@/api/businessCentral/useBcItemPicture';
+import { memo } from 'react';
 
-export default function TabTwoScreen() {
-  const bcItems = useBcItems();
+export default function ExplorePage() {
+  const { data, fetchNextPage: fetchNextBcItems, isLoading } = usePaginatedBcItems();
 
-  const items = bcItems?.data?.value;
+  const hasItems = data?.pages && data?.pages?.length > 0;
+
+  const dataToDisplay = hasItems
+    ? data?.pages?.reduce<BcItem[]>((acc, cur) => {
+        return [...acc, ...(cur?.value || [])];
+      }, [])
+    : [];
+
+  // const items = bcItems?.data?.value;
 
   return (
     <ThemedView
@@ -23,23 +32,35 @@ export default function TabTwoScreen() {
         flex: 1
       }}>
       <FlatList
-        data={items}
+        data={dataToDisplay}
+        keyExtractor={(_, index) => `${index}`}
         renderItem={({ item, index }) => {
-          return <ListItem data={item} key={index} />;
+          return <ListItem data={item} index={index} />;
+        }}
+        onEndReachedThreshold={0.1}
+        onEndReached={() => {
+          fetchNextBcItems();
         }}
       />
     </ThemedView>
   );
 }
-const ListItem = ({ data }: { data: BcItem }) => {
+const ListItem = ({ data, index }: { data: BcItem; index?: number }) => {
   const { data: picture } = useBcItemPicture({ itemId: data?.id });
-
   return (
     <ThemedView>
-      {typeof picture === 'string' && (
-        <Image source={{ uri: picture }} style={{ width: 100, height: 100 }} />
-      )}
+      <CardPicture picture={picture} />
       <ThemedText>{data?.displayName}</ThemedText>
     </ThemedView>
   );
 };
+
+const CardPicture = memo(({ picture }: { picture: any }) => {
+  return (
+    typeof picture === 'string' && (
+      <Image source={{ uri: picture }} style={{ width: 100, height: 100 }} />
+    )
+  );
+});
+
+CardPicture.displayName = 'CardPicture';

@@ -42,12 +42,16 @@ export const fetchBc = async <T>(props: FetchBcProps): Promise<T | null> => {
       ) {
         // return res?.blob();
         try {
-          // const response = await fetch('https://your-api-endpoint/pictureContent');
-          return res.blob().then((blob) =>
-            convertBlobToBase64(blob).then((base64Data) => {
-              return 'data:image/jpeg;base64,' + base64Data;
-            })
-          ); // or response.arrayBuffer() if you prefer
+          return res
+            .blob()
+            .then((blob) =>
+              convertBlobToBase64(blob).then((base64Data) => {
+                return base64Data ? 'data:image/jpeg;base64,' + base64Data : null;
+              })
+            )
+            .catch((error) => {
+              throw error;
+            }); // or response.arrayBuffer() if you prefer
         } catch (error) {
           console.error('Error fetching image:', error);
         }
@@ -75,7 +79,7 @@ export const fetchBc = async <T>(props: FetchBcProps): Promise<T | null> => {
 //   }
 // };
 
-const convertBlobToBase64 = (blob: Blob) => {
+const convertBlobToBase64 = async (blob: Blob) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onerror = reject;
@@ -84,5 +88,7 @@ const convertBlobToBase64 = (blob: Blob) => {
       resolve(reader?.result?.split(',')[1]);
     };
     reader.readAsDataURL(blob);
+  }).catch((error) => {
+    throw error;
   });
 };
