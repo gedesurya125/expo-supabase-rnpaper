@@ -44,11 +44,12 @@ export const fetchBc = async <T>(props: FetchBcProps): Promise<T | null> => {
         try {
           return res
             .blob()
-            .then((blob) =>
-              convertBlobToBase64(blob).then((base64Data) => {
+            .then(async (blob) => {
+              if (blob.size === 0) return null;
+              return convertBlobToBase64(blob).then((base64Data) => {
                 return base64Data ? 'data:image/jpeg;base64,' + base64Data : null;
-              })
-            )
+              });
+            })
             .catch((error) => {
               throw error;
             }); // or response.arrayBuffer() if you prefer

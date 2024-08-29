@@ -18,6 +18,6 @@ export const usePaginatedBcItems = () => {
   return usePaginatedFetchBc<BcItemHookResponse>({
     endPoint: '/items',
     queryKey: ['paginated-bc-items'],
-    pageSize: 7
+    pageSize: 8
   });
 };
