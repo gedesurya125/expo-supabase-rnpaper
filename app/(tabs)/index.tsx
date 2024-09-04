@@ -1,4 +1,4 @@
-import { StyleSheet, Platform, SafeAreaView } from 'react-native';
+import { StyleSheet, Platform, SafeAreaView, Image } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import { ThemedView } from '@/components/ThemedView';
@@ -45,6 +45,16 @@ export default function HomeScreen() {
           Or
         </Text>
         <StyledButton>New Customer</StyledButton>
+        <Image
+          source={{
+            uri: 'https://fahzhmnfqhxgdpohxwwx.supabase.co/storage/v1/object/public/images/uploads/surya.jpeg'
+          }}
+          style={{
+            width: 100,
+            height: 100
+          }}
+          alt=""
+        />
       </ThemedView>
     </SafeAreaView>
   );
