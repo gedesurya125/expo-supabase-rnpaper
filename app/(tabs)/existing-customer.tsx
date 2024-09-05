@@ -94,7 +94,7 @@ export const CustomerItem = ({ item }: { item: BcCustomer }) => {
       </Pressable>
       <Link
         href={{
-          pathname: '/customer-detail-modal',
+          pathname: '/customer-detail-modal', //? link to the modal is not exist yet
           params: {
             id: item.id
           }
