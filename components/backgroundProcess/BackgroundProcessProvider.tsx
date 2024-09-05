@@ -54,9 +54,11 @@ export const BackgroundProcessProvider = ({ children }: BackgroundProcessProvide
     setIsRegistered(isRegistered);
   };
 
-  registerBackgroundFetchAsync().then(() => {
-    checkStatusAsync();
-  });
+  if (!isRegistered) {
+    registerBackgroundFetchAsync().then(() => {
+      checkStatusAsync();
+    });
+  }
 
   console.log('Background Fetch Statuses', { isRegistered, status });
 
