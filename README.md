@@ -51,4 +51,6 @@ Join our community of developers creating universal apps.
 
 ## Resources:
 
-- UI-React : https://tinybase.org/api/ui-react/
+- TinyBase UI-React : https://tinybase.org/api/ui-react/
+- Expo background fetch: https://docs.expo.dev/versions/latest/sdk/background-fetch/#installations
+- Background fetch in IOS only can run in development Build : https://docs.expo.dev/versions/latest/sdk/task-manager/#background-modes-on-ios

@@ -16,7 +16,8 @@
       "supportsTablet": true,
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to scan barcodes on event tickets.",
-        "NSFaceIDUsageDescription": "This app use the FaceId to enable login on current app"
+        "NSFaceIDUsageDescription": "This app use the FaceId to enable login on current app",
+        "UIBackgroundModes": ["fetch"]
       },
       "bundleIdentifier": "com.gedesurya125.exposupabasernpaper"
     },
@@ -25,10 +26,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": [
-        "android.permission.USE_BIOMETRIC",
-        "android.permission.USE_FINGERPRINT"
-      ]
+      "permissions": ["android.permission.USE_BIOMETRIC", "android.permission.USE_FINGERPRINT"]
     },
     "web": {
       "bundler": "metro",

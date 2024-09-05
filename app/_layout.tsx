@@ -12,6 +12,7 @@ import { ReactQueryProvider } from '@/components/ReactQueryProvider';
 import { BusinessCentralContextProvider } from '@/api/businessCentral/context/BusinessCentralContext';
 import { SelectedCustomerContextProvider } from '@/components/SelectedCustomerContext';
 import { StoreProvider } from '@/components/tinyBase/StoreProvider';
+import { BackgroundProcessProvider } from '@/components/backgroundProcess/BackgroundProcessProvider';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -36,17 +37,19 @@ export default function RootLayout() {
       <AuthContextProvider>
         <ReactQueryProvider>
           <BusinessCentralContextProvider>
-            <SelectedCustomerContextProvider>
-              <PaperProvider theme={defaultTheme}>
-                <Stack
-                  screenOptions={{
-                    headerShown: false
-                  }}>
-                  <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                  <Stack.Screen name="+not-found" />
-                </Stack>
-              </PaperProvider>
-            </SelectedCustomerContextProvider>
+            <BackgroundProcessProvider>
+              <SelectedCustomerContextProvider>
+                <PaperProvider theme={defaultTheme}>
+                  <Stack
+                    screenOptions={{
+                      headerShown: false
+                    }}>
+                    <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                    <Stack.Screen name="+not-found" />
+                  </Stack>
+                </PaperProvider>
+              </SelectedCustomerContextProvider>
+            </BackgroundProcessProvider>
           </BusinessCentralContextProvider>
         </ReactQueryProvider>
       </AuthContextProvider>

@@ -34,6 +34,6 @@ export const usePaginatedBcCustomers = (operation?: string) => {
   });
 };
 
-interface CustomerFetchResponse {
+export interface CustomerFetchResponse {
   value: BcCustomer[];
 }

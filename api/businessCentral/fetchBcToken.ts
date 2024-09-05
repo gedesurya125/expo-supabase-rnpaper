@@ -43,8 +43,6 @@ export const fetchBcToken = async (
   // call the callback if the callback exist
   !!callback && callback(authResponse);
 
-  console.log('this is the auth response', authResponse);
-
   return authResponse;
 };
 
