@@ -17,13 +17,18 @@
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to scan barcodes on event tickets.",
         "NSFaceIDUsageDescription": "This app use the FaceId to enable login on current app"
-      }
+      },
+      "bundleIdentifier": "com.gedesurya125.exposupabasernpaper"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -41,6 +46,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "42f6e578-0d1c-40f2-91ef-6d5ceebd3bda"
+      }
     }
   }
 }
