@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import * as BackgroundFetch from 'expo-background-fetch';
 import * as TaskManager from 'expo-task-manager';
-import { fetchBcToken } from '@/api/businessCentral/fetchBcToken';
-import { BUSINESS_CENTRAL_DATABASE, localStore } from '../tinyBase/StoreProvider';
+import { localStore } from '../tinyBase/StoreProvider';
+import { runSynchronizationTask } from './runSynchronizationTask';
 
 interface BackgroundProcessProviderProps {
   children: React.ReactNode;
@@ -15,16 +15,9 @@ const BACKGROUND_PROCESS_TASKS = {
 // ? Defining the task
 TaskManager.defineTask(BACKGROUND_PROCESS_TASKS.fetchBc, async () => {
   try {
-    const currentTime = new Date();
-    console.log(
-      `Background process run at: ${currentTime.toLocaleDateString()} --- ${currentTime.toLocaleTimeString()}`
-    );
+    console.log(`Background process run at: ${new Date().toLocaleString()}`);
 
-    const bcToken = await fetchBcToken();
-
-    localStore.setRow(BUSINESS_CENTRAL_DATABASE.tables.tokens.name, 'main_token', {
-      [BUSINESS_CENTRAL_DATABASE.tables.tokens.rows.token.name]: bcToken.access_token
-    });
+    await runSynchronizationTask();
 
     return BackgroundFetch.BackgroundFetchResult.NewData;
   } catch (error) {
