@@ -4,6 +4,7 @@ import { Provider } from 'tinybase/ui-react';
 import { createExpoSqlitePersister } from 'tinybase/persisters/persister-expo-sqlite';
 import * as SQLite from 'expo-sqlite';
 import { useTinyBaseDevTools } from '@dev-plugins/tinybase';
+import { useDrizzleStudio } from 'expo-drizzle-studio-plugin';
 
 interface StoreProviderProps {
   children: React.ReactNode;
@@ -36,6 +37,7 @@ persister.load().then(persister.startAutoSave);
 
 export const StoreProvider = ({ children }: StoreProviderProps) => {
   useTinyBaseDevTools(localStore);
+  useDrizzleStudio(db);
 
   return <Provider store={localStore}>{children}</Provider>;
 };
