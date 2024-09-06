@@ -48,12 +48,12 @@ export default function HomeScreen() {
         <StyledButton>New Customer</StyledButton>
         <StyledButton
           onPress={() => {
-            localStore.addRow('LOG', { message: 'this is the pressed log' });
+            localStore.delTables();
           }}
           style={{
             marginTop: 30
           }}>
-          Test add to local store
+          Delete Tables
         </StyledButton>
       </ThemedView>
     </SafeAreaView>

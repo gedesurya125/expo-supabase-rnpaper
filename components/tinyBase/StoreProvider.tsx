@@ -1,32 +1,15 @@
 import React from 'react';
-import { createStore } from 'tinybase/store';
+import { createStore, Row } from 'tinybase/store';
 import { Provider } from 'tinybase/ui-react';
 import { createExpoSqlitePersister } from 'tinybase/persisters/persister-expo-sqlite';
 import * as SQLite from 'expo-sqlite';
 import { useTinyBaseDevTools } from '@dev-plugins/tinybase';
 import { useDrizzleStudio } from 'expo-drizzle-studio-plugin';
+import { BUSINESS_CENTRAL_DATABASE } from './businessCentralDatabaseSchema';
 
 interface StoreProviderProps {
   children: React.ReactNode;
 }
-
-export const BUSINESS_CENTRAL_DATABASE = {
-  name: 'business_central',
-  tables: {
-    customers: {
-      name: 'customer',
-      rows: {
-        nameCell: { name: 'name' }
-      }
-    },
-    tokens: {
-      name: 'tokens',
-      rows: {
-        token: { name: 'token' }
-      }
-    }
-  }
-};
 
 export const localStore = createStore();
 

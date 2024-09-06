@@ -64,8 +64,6 @@ export const BackgroundProcessProvider = ({ children }: BackgroundProcessProvide
     if (!isRegistered) {
       registerBackgroundFetchAsync().then(() => {
         checkStatusAsync();
-
-        localStore.addRow('LOG', { message: 'log after the background process is registered' });
       });
     }
   }, [isRegistered]);

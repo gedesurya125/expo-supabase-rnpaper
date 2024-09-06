@@ -1,7 +1,16 @@
 import { BcTokenResponse, fetchBcToken } from '@/api/businessCentral/fetchBcToken';
-import { BUSINESS_CENTRAL_DATABASE, localStore } from '../tinyBase/StoreProvider';
+import { localStore } from '../tinyBase/StoreProvider';
 import { fetchBc } from '@/api/businessCentral/fetchBc';
 import { CustomerFetchResponse } from '@/api/businessCentral/useBcCustomers';
+import {
+  BC_CUSTOMER_TABLE,
+  BC_SYNCHRONIZATION_TABLE,
+  BC_TOKEN_TABLE,
+  BcSynchronizationTable,
+  SynchronizationSource
+} from '../tinyBase/businessCentralDatabaseSchema';
+import { BcCustomer } from '@/api/businessCentral/types/customer';
+import { Row } from 'tinybase/store';
 
 export const runSynchronizationTask = async () => {
   try {
@@ -16,8 +25,9 @@ export const runSynchronizationTask = async () => {
 const getAndStoreBCToken = async () => {
   console.log('Syncing BcToken');
   const bcToken = await fetchBcToken();
-  localStore.setRow(BUSINESS_CENTRAL_DATABASE.tables.tokens.name, 'main_token', {
-    [BUSINESS_CENTRAL_DATABASE.tables.tokens.rows.token.name]: bcToken.access_token
+
+  localStore.setRow(BC_TOKEN_TABLE.name, 'main_token', {
+    [BC_TOKEN_TABLE.cols.token.name]: bcToken.access_token
   });
   return bcToken;
 };
@@ -25,7 +35,7 @@ const getAndStoreBCToken = async () => {
 const syncBcCustomers = async (bcToken: BcTokenResponse) => {
   // ? if the local customer storage is empty
 
-  const hasCustomerTable = localStore.hasTable(BUSINESS_CENTRAL_DATABASE.tables.customers.name);
+  const hasCustomerTable = localStore.hasTable(BC_CUSTOMER_TABLE.name);
 
   if (!hasCustomerTable) {
     // ? if empty do initial synchronization (fetch all data from BC)
@@ -35,17 +45,42 @@ const syncBcCustomers = async (bcToken: BcTokenResponse) => {
       token: bcToken.access_token,
       endPoint: `/customers`
     });
-
-    bcCustomer?.value.forEach((customer, index) => {
-      localStore.setRow(BUSINESS_CENTRAL_DATABASE.tables.customers.name, customer.id, {
-        ...customer,
-        isSynced: true
+    if (bcCustomer?.value) {
+      writeCustomersToLocalStore(bcCustomer?.value);
+      writeSynchronizationRecord({
+        table: BC_CUSTOMER_TABLE.name,
+        source: 'remote',
+        target: 'locale'
       });
-    });
+    }
   } else {
     // ? if not empty do the post synchronization (fetch all data from BC from last synchronization time)
     console.log('BC Customer Synchronization is running');
   }
+};
 
-  // console.log('this is the business central customer', bcCustomer);
+const writeCustomersToLocalStore = (bcCustomers: BcCustomer[]) => {
+  bcCustomers.forEach((customer) => {
+    localStore.setRow(BC_CUSTOMER_TABLE.name, customer.id, {
+      ...customer,
+      [BC_CUSTOMER_TABLE.cols.isSynced.name]: true
+    });
+  });
+};
+
+const writeSynchronizationRecord = ({
+  table,
+  source,
+  target
+}: {
+  table: string;
+  source: SynchronizationSource;
+  target: SynchronizationSource;
+}) => {
+  localStore.addRow(BC_SYNCHRONIZATION_TABLE.name, {
+    table,
+    time: new Date().toISOString(),
+    source,
+    target
+  });
 };
