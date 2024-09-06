@@ -17,7 +17,7 @@
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to scan barcodes on event tickets.",
         "NSFaceIDUsageDescription": "This app use the FaceId to enable login on current app",
-        "UIBackgroundModes": ["fetch"]
+        "UIBackgroundModes": ["location", "fetch", "remote-notification"]
       },
       "bundleIdentifier": "com.gedesurya125.exposupabasernpaper"
     },

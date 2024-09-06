@@ -27,16 +27,16 @@ export const BUSINESS_CENTRAL_DATABASE = {
   }
 };
 
-export const store = createStore();
+export const localStore = createStore();
 
 const db = SQLite.openDatabaseSync(BUSINESS_CENTRAL_DATABASE.name); //TODO: check if it's works without .db after the name
 
-const persister = createExpoSqlitePersister(store, db);
+const persister = createExpoSqlitePersister(localStore, db);
 persister.load().then(persister.startAutoSave);
 
 export const StoreProvider = ({ children }: StoreProviderProps) => {
   useDrizzleStudio(db);
-  return <Provider store={store}>{children}</Provider>;
+  return <Provider store={localStore}>{children}</Provider>;
 };
 
 //Functions

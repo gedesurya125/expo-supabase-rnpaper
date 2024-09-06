@@ -5,6 +5,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { Button, Text } from 'react-native-paper';
 import { useCurrentUser } from '@/utils/useCurrentUser';
 import { useNavigation } from 'expo-router';
+import { localStore } from '@/components/tinyBase/StoreProvider';
 
 export default function HomeScreen() {
   const { currentUser } = useCurrentUser();
@@ -45,16 +46,15 @@ export default function HomeScreen() {
           Or
         </Text>
         <StyledButton>New Customer</StyledButton>
-        <Image
-          source={{
-            uri: 'https://fahzhmnfqhxgdpohxwwx.supabase.co/storage/v1/object/public/images/uploads/surya.jpeg'
+        <StyledButton
+          onPress={() => {
+            localStore.addRow('LOG', { message: 'this is the pressed log' });
           }}
           style={{
-            width: 100,
-            height: 100
-          }}
-          alt=""
-        />
+            marginTop: 30
+          }}>
+          Test add to local store
+        </StyledButton>
       </ThemedView>
     </SafeAreaView>
   );
