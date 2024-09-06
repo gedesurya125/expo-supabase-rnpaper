@@ -1,9 +1,9 @@
 import React from 'react';
 import { createStore } from 'tinybase/store';
-import { Provider, useAddRowCallback } from 'tinybase/ui-react';
+import { Provider } from 'tinybase/ui-react';
 import { createExpoSqlitePersister } from 'tinybase/persisters/persister-expo-sqlite';
-import { useDrizzleStudio } from 'expo-drizzle-studio-plugin';
 import * as SQLite from 'expo-sqlite';
+import { useTinyBaseDevTools } from '@dev-plugins/tinybase';
 
 interface StoreProviderProps {
   children: React.ReactNode;
@@ -35,14 +35,7 @@ const persister = createExpoSqlitePersister(localStore, db);
 persister.load().then(persister.startAutoSave);
 
 export const StoreProvider = ({ children }: StoreProviderProps) => {
-  useDrizzleStudio(db);
+  useTinyBaseDevTools(localStore);
+
   return <Provider store={localStore}>{children}</Provider>;
 };
-
-//Functions
-
-// export const useRecordToken = () =>
-//   useAddRowCallback(BUSINESS_CENTRAL_DATABASE.tables.tokens.name, (token: string) => ({
-//     [BUSINESS_CENTRAL_DATABASE.tables.tokens.rows.id.name]: 1,
-//     [BUSINESS_CENTRAL_DATABASE.tables.tokens.rows.token.name]: token
-//   }));

@@ -55,3 +55,4 @@ Join our community of developers creating universal apps.
 - Expo background fetch: https://docs.expo.dev/versions/latest/sdk/background-fetch/#installations
 - Background fetch in IOS only can run in development Build : https://docs.expo.dev/versions/latest/sdk/task-manager/#background-modes-on-ios
 - Background fetch run inconsistently. But fortunately in development we can trigger the background fetch manually https://github.com/expo/expo/issues/8566
+- Expo Tinybase dev plugin https://github.com/expo/dev-plugins/tree/main/packages/tinybases

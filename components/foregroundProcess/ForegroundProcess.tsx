@@ -26,7 +26,7 @@ export const ForegroundProcessProvider = ({ children }: ForegroundProcessPropsPr
     const appStateSubscription = AppState.addEventListener('change', handleAppStateChange);
 
     // ? Sync in Interval
-    const syncInterval = setInterval(syncDataWithServer, 1000 * 20);
+    const syncInterval = setInterval(syncDataWithServer, 1000 * 30);
 
     return () => {
       appStateSubscription.remove();
