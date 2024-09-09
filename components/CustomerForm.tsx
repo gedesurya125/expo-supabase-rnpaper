@@ -7,7 +7,17 @@ import { localStore } from './tinyBase/StoreProvider';
 import { BC_CUSTOMER_TABLE } from './tinyBase/businessCentralDatabaseSchema';
 import { BcCustomer } from '@/api/businessCentral/types/customer';
 
-export const AddCustomerForm = () => {
+interface CustomerFormProps {
+  submitButtonText?: string;
+  handleSubmit?: (value: BcCustomer) => void;
+  initialValue?: BcCustomer;
+}
+
+export const CustomerForm = ({
+  submitButtonText = 'Submit',
+  handleSubmit,
+  initialValue
+}: CustomerFormProps) => {
   const handleCreateNewCustomer = async (value: BcCustomer) => {
     localStore.addRow(BC_CUSTOMER_TABLE.name, value);
   };
@@ -15,33 +25,38 @@ export const AddCustomerForm = () => {
   return (
     <View style={{}}>
       <Formik
-        initialValues={{
-          addressLine1: '',
-          addressLine2: '',
-          blocked: '',
-          city: '',
-          country: '',
-          currencyCode: 'USD',
-          currencyId: '00000000-0000-0000-0000-000000000000',
-          displayName: '',
-          email: '',
-          number: '',
-          paymentMethodId: '',
-          paymentTermsId: '',
-          phoneNumber: '',
-          postalCode: '',
-          salespersonCode: '',
-          shipmentMethodId: '',
-          state: '',
-          taxAreaId: '',
-          taxRegistrationNumber: '',
-          type: 'Company',
-          website: '',
-          isSynced: false
-        }}
+        initialValues={
+          initialValue || {
+            addressLine1: '',
+            addressLine2: '',
+            blocked: '',
+            city: '',
+            country: '',
+            currencyCode: 'USD',
+            currencyId: '00000000-0000-0000-0000-000000000000',
+            displayName: '',
+            email: '',
+            number: '',
+            paymentMethodId: '',
+            paymentTermsId: '',
+            phoneNumber: '',
+            postalCode: '',
+            salespersonCode: '',
+            shipmentMethodId: '',
+            state: '',
+            taxAreaId: '',
+            taxRegistrationNumber: '',
+            type: 'Company',
+            website: '',
+            isSynced: false
+          }
+        }
         onSubmit={(values: BcCustomer) => {
-          console.log('this is the formik values', values);
-          handleCreateNewCustomer(values);
+          if (handleSubmit) {
+            handleSubmit(values);
+          } else {
+            handleCreateNewCustomer(values);
+          }
         }}>
         {({ handleChange, handleBlur, handleSubmit, values }) => {
           return (
@@ -56,14 +71,19 @@ export const AddCustomerForm = () => {
               <TextInputField label="Phone Number" name="phoneNumber" />
               <TextInputField label="email" name="email" />
 
-              <Button
-                onPress={() => handleSubmit()}
-                mode="contained"
+              <View
                 style={{
-                  marginTop: 20
+                  alignItems: 'center'
                 }}>
-                Submit
-              </Button>
+                <Button
+                  onPress={() => handleSubmit()}
+                  mode="contained"
+                  style={{
+                    marginTop: 20
+                  }}>
+                  {submitButtonText}
+                </Button>
+              </View>
             </>
           );
         }}

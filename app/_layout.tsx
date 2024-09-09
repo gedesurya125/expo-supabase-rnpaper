@@ -47,6 +47,18 @@ export default function RootLayout() {
                         headerShown: false
                       }}>
                       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                      <Stack.Screen
+                        name="(modal)/customer-detail"
+                        options={{
+                          presentation: 'modal'
+                        }}
+                      />
+                      <Stack.Screen
+                        name="(modal)/customer-edit"
+                        options={{
+                          presentation: 'modal'
+                        }}
+                      />
                       <Stack.Screen name="+not-found" />
                     </Stack>
                   </PaperProvider>
