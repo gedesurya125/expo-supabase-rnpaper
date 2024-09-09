@@ -81,7 +81,7 @@ const synchronizeRemoteCustomerToLocal = async (token: string) => {
 const synchronizeLocalCustomerToRemote = async (token: string) => {
   const localCustomers = localStore.getTable(BC_CUSTOMER_TABLE.name);
   const unsynchronizedLocalCustomer = Object.entries(localCustomers).filter(
-    ([_rowId, row]) => row?.isSynced === false //! should be changed to false latter
+    ([_rowId, row]) => row?.isSynced !== true //! should be changed to false latter
   );
 
   if (unsynchronizedLocalCustomer?.length > 0) {
@@ -99,7 +99,7 @@ const synchronizeLocalCustomerToRemote = async (token: string) => {
   console.log('THIS IS THE LOCAL CUSTOMER TABLE TO BE SYNC', unsynchronizedLocalCustomer);
 };
 
-const updateSingleLocalCustomerToRemote = async (token: string, customerData: BcCustomer) => {
+const prepareCustomerDataToSend = (customerData: BcCustomer) => {
   const dataForUpdate = { ...customerData };
   delete dataForUpdate.id;
   delete dataForUpdate.lastModifiedDateTime;
@@ -108,6 +108,11 @@ const updateSingleLocalCustomerToRemote = async (token: string, customerData: Bc
   delete dataForUpdate.isSynced;
   delete dataForUpdate?.balanceDue;
   delete dataForUpdate?.taxAreaDisplayName;
+  return dataForUpdate;
+};
+
+const updateSingleLocalCustomerToRemote = async (token: string, customerData: BcCustomer) => {
+  const dataForUpdate = prepareCustomerDataToSend(customerData);
 
   const response = await fetchBc<BcCustomer>({
     token,
@@ -123,17 +128,26 @@ const updateSingleLocalCustomerToRemote = async (token: string, customerData: Bc
   });
   console.log('THIS IS THE UPDate response', { response });
 };
+
 const createSingleLocalCustomerToRemote = async (
   token: string,
   customerData: BcCustomer,
   rowId: string
 ) => {
+  const dataToCreate = prepareCustomerDataToSend(customerData);
+  const removedEmptyKeys = Object.fromEntries(
+    Object.entries(dataToCreate).filter(([_, value]) => !!value)
+  );
+
   const newCustomer = await fetchBc<BcCustomer>({
     token,
     endPoint: `/customers`,
     options: {
       method: 'POST',
-      body: JSON.stringify(customerData)
+      body: JSON.stringify(removedEmptyKeys),
+      headers: {
+        'Content-Type': 'application/json'
+      }
     }
   });
   if (!newCustomer?.id) return;

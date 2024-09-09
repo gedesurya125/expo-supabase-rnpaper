@@ -4,10 +4,10 @@ export type BcCustomer = {
   addressLine1: string;
   addressLine2: string;
   balanceDue?: number; //it is read only
-  blocked: string;
+  blocked?: string;
   city: string;
   country: string;
-  creditLimit: number;
+  creditLimit?: number;
   currencyCode: string;
   currencyId: string;
   displayName: string;
@@ -24,7 +24,7 @@ export type BcCustomer = {
   state: string;
   taxAreaDisplayName?: string; //it is read only
   taxAreaId: string;
-  taxLiable: boolean;
+  taxLiable?: boolean;
   taxRegistrationNumber: string;
   type: string;
   website: string;
