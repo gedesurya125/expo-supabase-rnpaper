@@ -10,6 +10,9 @@ import { BcCustomer } from '@/api/businessCentral/types/customer';
 import { ThemedView } from '@/components/ThemedView';
 import { Divider, Icon, Text, useTheme } from 'react-native-paper';
 import { TextInput } from '@/components';
+import { localStore } from '@/components/tinyBase/StoreProvider';
+import { BC_CUSTOMER_TABLE } from '@/components/tinyBase/businessCentralDatabaseSchema';
+import { useTable } from 'tinybase/ui-react';
 
 // =========== Main COmponent ===========
 
@@ -44,6 +47,11 @@ const CustomerList = () => {
       }, [])
     : [];
 
+  const localCustomerData = useTable(BC_CUSTOMER_TABLE.name);
+  const preparedDataForDisplay = Object.entries(localCustomerData).map(
+    ([_key, value]) => value as BcCustomer
+  );
+
   return (
     <>
       <SearchBar setSearch={setSearchInput} />
@@ -52,7 +60,7 @@ const CustomerList = () => {
         <Text>Loading...</Text>
       ) : (
         <FlatList
-          data={dataToDisplay}
+          data={preparedDataForDisplay}
           renderItem={({ item }) => <CustomerItem item={item} />}
           keyExtractor={(item, index) => `${index}`}
           ItemSeparatorComponent={Divider}

@@ -1,10 +1,9 @@
-import { BcCustomer } from '@/api/businessCentral/types/customer';
 import { ThemedView } from '@/components/ThemedView';
 import { BC_CUSTOMER_TABLE } from '@/components/tinyBase/businessCentralDatabaseSchema';
-import { localStore } from '@/components/tinyBase/StoreProvider';
 import { Href, Link, router, useLocalSearchParams } from 'expo-router';
 import { ScrollView, View, ViewStyle } from 'react-native';
 import { Button, Text } from 'react-native-paper';
+import { useRow } from 'tinybase/ui-react';
 
 export default function CustomerDetailModal() {
   const isPresented = router.canGoBack();
@@ -12,7 +11,8 @@ export default function CustomerDetailModal() {
 
   const customerId = params?.id as string;
 
-  const customerDetail = localStore.getRow(BC_CUSTOMER_TABLE.name, customerId) as BcCustomer;
+  // const customerDetail = localStore.getRow(BC_CUSTOMER_TABLE.name, customerId) as BcCustomer;
+  const customerDetail = useRow(BC_CUSTOMER_TABLE.name, customerId);
 
   return (
     <ThemedView style={{ flex: 1, paddingHorizontal: 20, paddingVertical: 20 }}>

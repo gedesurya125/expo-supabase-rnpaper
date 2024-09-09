@@ -17,6 +17,7 @@ export default function CustomerEdit() {
   const customerData = localStore.getRow(BC_CUSTOMER_TABLE.name, customerId) as BcCustomer;
   const handleCreateNewCustomer = async (value: BcCustomer) => {
     localStore.setRow(BC_CUSTOMER_TABLE.name, value.id!, value);
+    if (isPresented) router.back();
   };
 
   return (
