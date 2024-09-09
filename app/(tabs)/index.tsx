@@ -6,6 +6,8 @@ import { Button, Text } from 'react-native-paper';
 import { useCurrentUser } from '@/utils/useCurrentUser';
 import { useNavigation } from 'expo-router';
 import { localStore } from '@/components/tinyBase/StoreProvider';
+import { Link } from 'expo-router';
+import React, { ButtonHTMLAttributes, ReactElement } from 'react';
 
 export default function HomeScreen() {
   const { currentUser } = useCurrentUser();
@@ -45,7 +47,9 @@ export default function HomeScreen() {
           }}>
           Or
         </Text>
-        <StyledButton>New Customer</StyledButton>
+        <Link href="/new-customer" asChild>
+          <StyledButton>New Customer</StyledButton>
+        </Link>
         <StyledButton
           onPress={() => {
             localStore.delTables();
@@ -60,9 +64,10 @@ export default function HomeScreen() {
   );
 }
 
-const StyledButton = ({ style, ...props }: React.ComponentProps<typeof Button>) => {
+const StyledButton = React.forwardRef<any, any>(({ style, ...props }, ref) => {
   return (
     <Button
+      ref={ref}
       mode="contained"
       {...props}
       style={[
@@ -74,4 +79,6 @@ const StyledButton = ({ style, ...props }: React.ComponentProps<typeof Button>) 
       {props.children}
     </Button>
   );
-};
+});
+
+StyledButton.displayName = 'StyledButton';
