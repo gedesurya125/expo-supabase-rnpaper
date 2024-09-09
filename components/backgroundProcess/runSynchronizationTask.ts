@@ -81,20 +81,17 @@ const synchronizeRemoteCustomerToLocal = async (token: string) => {
 const synchronizeLocalCustomerToRemote = async (token: string) => {
   const localCustomers = localStore.getTable(BC_CUSTOMER_TABLE.name);
   const unsynchronizedLocalCustomer = Object.entries(localCustomers).filter(
-    ([rowId, row]) => row?.isSynced === false //! should be changed to false latter
+    ([_rowId, row]) => row?.isSynced === false //! should be changed to false latter
   );
 
   if (unsynchronizedLocalCustomer?.length > 0) {
-    // TODO: run push local unsynchronized data to remote data
     await Promise.all(
       unsynchronizedLocalCustomer.map(async ([rowId, row]) => {
-        const isExistingData = row?.id;
+        const isExistingData = row?.id; //!important for client, don't provide id when creating a customer
         if (isExistingData) {
-          // ? Update the BC Data
           return await updateSingleLocalCustomerToRemote(token, row as BcCustomer);
         } else {
-          return await writeLocalCustomersToRemote(token, row as BcCustomer);
-          // ? Create new data to the Business central and then use the response to write back the data into local Database. Then remove the old data that has not BC_ID
+          return await createSingleLocalCustomerToRemote(token, row as BcCustomer, rowId);
         }
       })
     );
@@ -126,7 +123,24 @@ const updateSingleLocalCustomerToRemote = async (token: string, customerData: Bc
   });
   console.log('THIS IS THE UPDate response', { response });
 };
-const writeLocalCustomersToRemote = async (token: string, customerData: BcCustomer) => {}; //TODO: continue
+const createSingleLocalCustomerToRemote = async (
+  token: string,
+  customerData: BcCustomer,
+  rowId: string
+) => {
+  const newCustomer = await fetchBc<BcCustomer>({
+    token,
+    endPoint: `/customers`,
+    options: {
+      method: 'POST',
+      body: JSON.stringify(customerData)
+    }
+  });
+  if (!newCustomer?.id) return;
+  //? replace the old record with new record that we got from BC
+  writeSingleRemoteCustomerToLocalData(newCustomer);
+  localStore.delRow(BC_CUSTOMER_TABLE.name, rowId);
+};
 
 const fetchAndSynchronizeRemoteCustomerAndLocalCustomer = async (
   token: string,
@@ -138,11 +152,8 @@ const fetchAndSynchronizeRemoteCustomerAndLocalCustomer = async (
 
   await Promise.all(
     bcCustomers.map(async (customer) => {
-      // TODO: before setRow, we need to compare if local data is newer than the remote data
       if (!customer?.id) return null;
       const currentLocalData = localStore.getRow(BC_CUSTOMER_TABLE.name, customer.id);
-
-      console.log('this is the currentLocaldata', currentLocalData);
 
       if (Object.keys(currentLocalData)?.length === 0) {
         return writeSingleRemoteCustomerToLocalData(customer);
