@@ -6,17 +6,20 @@ import { Button, TextInput } from 'react-native-paper';
 import { localStore } from './tinyBase/StoreProvider';
 import { BC_CUSTOMER_TABLE } from './tinyBase/businessCentralDatabaseSchema';
 import { BcCustomer } from '@/api/businessCentral/types/customer';
+import { NavigationLink } from './NavigationLink';
 
 interface CustomerFormProps {
   submitButtonText?: string;
   handleSubmit?: (value: BcCustomer) => void;
   initialValue?: BcCustomer;
+  showBackButton?: boolean;
 }
 
 export const CustomerForm = ({
   submitButtonText = 'Submit',
   handleSubmit,
-  initialValue
+  initialValue,
+  showBackButton
 }: CustomerFormProps) => {
   const handleCreateNewCustomer = async (value: BcCustomer) => {
     localStore.addRow(BC_CUSTOMER_TABLE.name, value);
@@ -73,16 +76,23 @@ export const CustomerForm = ({
 
               <View
                 style={{
-                  alignItems: 'center'
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  marginTop: 20
                 }}>
-                <Button
-                  onPress={() => handleSubmit()}
-                  mode="contained"
-                  style={{
-                    marginTop: 20
-                  }}>
+                <Button onPress={() => handleSubmit()} mode="contained" style={{}}>
                   {submitButtonText}
                 </Button>
+                {showBackButton && (
+                  <NavigationLink
+                    href="../"
+                    style={{
+                      marginLeft: 20
+                    }}>
+                    Go Back
+                  </NavigationLink>
+                )}
               </View>
             </>
           );

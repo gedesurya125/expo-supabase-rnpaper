@@ -1,3 +1,4 @@
+import { NavigationLink } from '@/components/NavigationLink';
 import { ThemedView } from '@/components/ThemedView';
 import { BC_CUSTOMER_TABLE } from '@/components/tinyBase/businessCentralDatabaseSchema';
 import { Href, Link, router, useLocalSearchParams } from 'expo-router';
@@ -38,7 +39,7 @@ export default function CustomerDetailModal() {
               id: customerId
             }
           }}>
-          Update
+          Edit
         </NavigationLink>
         {isPresented && (
           <NavigationLink
@@ -67,20 +68,20 @@ const LabelAndValue = ({ label, value }: { label: string; value: string }) => {
   );
 };
 
-const NavigationLink = ({
-  href,
-  children,
-  style
-}: {
-  href: Href;
-  children: React.ReactNode;
-  style?: ViewStyle;
-}) => {
-  return (
-    <Link href={href} asChild>
-      <Button mode="contained" style={style}>
-        {children}
-      </Button>
-    </Link>
-  );
-};
+// const NavigationLink = ({
+//   href,
+//   children,
+//   style
+// }: {
+//   href: Href;
+//   children: React.ReactNode;
+//   style?: ViewStyle;
+// }) => {
+//   return (
+//     <Link href={href} asChild>
+//       <Button mode="contained" style={style}>
+//         {children}
+//       </Button>
+//     </Link>
+//   );
+// };

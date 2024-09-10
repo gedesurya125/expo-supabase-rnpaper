@@ -31,6 +31,7 @@ export default function CustomerEdit() {
           submitButtonText="Update"
           handleSubmit={handleCreateNewCustomer}
           initialValue={{ ...customerData, isSynced: false }}
+          showBackButton={isPresented}
         />
       </ScrollView>
     </ThemedView>
