@@ -1,5 +1,4 @@
-import { fetchBc } from '@/api/businessCentral/fetchBc';
-import { Form, Formik, useField } from 'formik';
+import { Formik, useField } from 'formik';
 import React from 'react';
 import { View } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
