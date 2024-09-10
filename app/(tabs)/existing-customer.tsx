@@ -1,16 +1,14 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { FlatList } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable } from 'react-native';
 import { Link, useNavigation } from 'expo-router';
 import { useSelectedCustomerContext } from '@/components/SelectedCustomerContext';
 
-import { usePaginatedBcCustomers } from '@/api/businessCentral/useBcCustomers';
 import { BcCustomer } from '@/api/businessCentral/types/customer';
 import { ThemedView } from '@/components/ThemedView';
 import { Divider, Icon, Text, useTheme } from 'react-native-paper';
 import { TextInput } from '@/components';
-import { localStore } from '@/components/tinyBase/StoreProvider';
 import { BC_CUSTOMER_TABLE } from '@/components/tinyBase/businessCentralDatabaseSchema';
 import { useTable } from 'tinybase/ui-react';
 
@@ -31,49 +29,27 @@ export default function ExistingCustomer() {
 const CustomerList = () => {
   const [searchInput, setSearchInput] = React.useState('');
 
-  const searchQuery = searchInput ? `&$filter=contains(displayName,'${searchInput}')` : '';
-
-  const {
-    data: customers,
-    fetchNextPage: fetchNextBcCustomers,
-    isLoading
-  } = usePaginatedBcCustomers(searchQuery);
-
-  const hasData = customers?.pages && customers?.pages.length > 0;
-
-  const dataToDisplay = hasData
-    ? customers?.pages?.reduce<BcCustomer[]>((acc, cur) => {
-        return [...acc, ...(cur?.value || [])];
-      }, [])
-    : [];
-
   const localCustomerData = useTable(BC_CUSTOMER_TABLE.name);
-  const preparedDataForDisplay = Object.entries(localCustomerData).map(
-    ([_key, value]) => value as BcCustomer
+  const preparedDataForDisplay = useMemo(
+    () => Object.entries(localCustomerData).map(([_key, value]) => value as BcCustomer),
+    [localCustomerData]
   );
 
+  const displayedData = preparedDataForDisplay.filter((data) =>
+    data.displayName.includes(searchInput)
+  );
   return (
     <>
-      <SearchBar setSearch={setSearchInput} />
-      {!hasData && <Text>{JSON.stringify(customers?.pages[0], null, 2)}</Text>}
-      {isLoading ? (
-        <Text>Loading...</Text>
-      ) : (
-        <FlatList
-          data={preparedDataForDisplay}
-          renderItem={({ item }) => <CustomerItem item={item} />}
-          keyExtractor={(item, index) => `${index}`}
-          ItemSeparatorComponent={Divider}
-          // ? how to make the search bar sticky, source: https://stackoverflow.com/questions/44638286/how-do-you-make-the-listheadercomponent-of-a-react-native-flatlist-sticky
-          onEndReachedThreshold={0.1}
-          onEndReached={() => {
-            fetchNextBcCustomers();
-          }}
-          style={{
-            flex: 1
-          }}
-        />
-      )}
+      <SearchBar setSearch={setSearchInput} searchInput={searchInput} />
+      <FlatList
+        data={displayedData}
+        renderItem={({ item }) => <CustomerItem item={item} />}
+        keyExtractor={(item, index) => `${index}`}
+        ItemSeparatorComponent={Divider}
+        style={{
+          flex: 1
+        }}
+      />
     </>
   );
 };
@@ -116,19 +92,8 @@ export const CustomerItem = ({ item }: { item: BcCustomer }) => {
   );
 };
 
-const SearchBar = ({ setSearch }: { setSearch: any }) => {
-  const [value, setValue] = React.useState('');
-
-  React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      setSearch(value);
-    }, 1000);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [value]);
-
-  return <ListSearchBar currentValue={value} setValue={setValue} />;
+const SearchBar = ({ setSearch, searchInput }: { setSearch: any; searchInput: string }) => {
+  return <ListSearchBar currentValue={searchInput} setValue={setSearch} />;
 };
 
 export const ListSearchBar = ({
